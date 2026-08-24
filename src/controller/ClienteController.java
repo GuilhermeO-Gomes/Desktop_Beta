@@ -5,8 +5,12 @@ import model.Cliente;
 import util.Validador;
 import view.TelaCliente;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
+
+import util.SenhaUtil;
 
 /** Faz a ponte entre os componentes da tela, o objeto Cliente e o DAO. */
 public class ClienteController {
@@ -41,15 +45,21 @@ public class ClienteController {
   public void salvar() {
     try {
       validar();
-      Cliente c = lerFormulario();
-      if (c.getId() == 0) {
-        dao.salvar(c);
+      Cliente cliente = lerFormulario();
+      String senha = new String(tela.getTxtSenha().getPassword());
+      if (senha.length() > 0) {
+        String salt = SenhaUtil.gerarSalt();
+        cliente.setSenha_salt(salt);
+        cliente.setSenha_hash(SenhaUtil.gerarHash(senha, salt));
+      }
+      if (cliente.getId() == 0) {
+        dao.salvar(cliente);
         mensagem(
           "Cliente cadastrado com sucesso.",
           JOptionPane.INFORMATION_MESSAGE
         );
       } else {
-        dao.atualizar(c);
+        dao.atualizar(cliente);
         mensagem(
           "Cliente atualizado com sucesso.",
           JOptionPane.INFORMATION_MESSAGE
@@ -98,14 +108,22 @@ public class ClienteController {
       erro(e);
     }
   }
-
+//Aqui
   private Cliente lerFormulario() {
-    Cliente c = new Cliente();
-    c.setId(tela.getIdSelecionado());
-    c.setNome(tela.getTxtNome().getText().trim());
-    c.setCpf(tela.getTxtCpf().getText().trim());
-    c.setEmail(tela.getTxtEmail().getText().trim());
-    return c;
+    Cliente cliente = new Cliente();
+    cliente.setId(tela.getIdSelecionado());
+    cliente.setNome(tela.getTxtNome().getText().trim());
+    cliente.setCpf(tela.getTxtCpf().getText().trim());
+    cliente.setEmail(tela.getTxtEmail().getText().trim());
+    //Formatar a data de nascimento
+    String txtData = tela.getTxtData_nascimento().getText().trim();
+    
+    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    LocalDate data_convertida = LocalDate.parse(txtData, formatador);
+    java.sql.Date dataSql = java.sql.Date.valueOf(data_convertida);
+    cliente.setData_nascimento(dataSql);
+    cliente.setAtivo(tela.getChkAtivo().isSelected());
+    return cliente;
   }
 
   private void validar() {

@@ -20,10 +20,12 @@ public final class Validador {
     int ponto = email.lastIndexOf('.');
     return arroba > 0 && ponto > arroba + 1 && ponto < email.length() - 1;
   }
-
+//Aqui ele faz um formatador de data, interessante
   public static Date converterData(String texto) throws ParseException {
+	  //Aqui ele instancia o SimpleDateFormat, que é uma lib externa, e passa pra ela o novo formato, que é o da variavel ali
     SimpleDateFormat formato = new SimpleDateFormat(FORMATO_DATA);
     formato.setLenient(false);
+    //Converteu a string para Date
     return formato.parse(texto.trim());
   }
 

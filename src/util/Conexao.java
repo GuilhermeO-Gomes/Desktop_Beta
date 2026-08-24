@@ -11,12 +11,12 @@ public final class Conexao {
 
   // Altere somente estas tres constantes para o seu ambiente MySQL.
   private static final String URL =
-    "jdbc:mysql://localhost:3307/biblioteca?useUnicode=true&characterEncoding=UTF-8&useSSL=false";
+    "jdbc:mysql://localhost:3307/Desktop_BetaBD";
   private static final String USUARIO = "root";
   private static final String SENHA = "";
 
   private Conexao() {}
-
+//Acredito fortemente que todas essas funções abaixo são aquela questão de abrir e fechar a conexão por motivos de segurança
   public static Connection abrir() throws SQLException {
     try {
       // Connector/J 5.1 usa este nome de driver, compativel com Java 6.

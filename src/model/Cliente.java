@@ -9,29 +9,47 @@ public class Cliente {
     private String cpf;
     private Date data_nascimento;
     private String email;
-    private String senha;
+    private String senha_salt;
+    private String senha_hash;
+    private boolean ativo;
     
     public Cliente() {
+    	this.ativo = true;
     }
 
-    public Cliente(String nome, String cpf, Date data_nascimento, String email, String senha) {
+    public Cliente(String nome, String cpf, String email, Date data_nascimento) {
+        this();
         this.nome = nome;
         this.cpf = cpf;
-        this.data_nascimento = data_nascimento;
         this.email = email;
-        this.senha = senha;
-    }
-
-    public Cliente(int id, String nome, String cpf, Date data_nascimento, String email, String senha) {
-        this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
         this.data_nascimento = data_nascimento;
-        this.email = email;
-        this.senha = senha;
-    }
+      }
 
-    public String getCpf() {
+    public String getSenha_salt() {
+		return senha_salt;
+	}
+
+
+
+	public void setSenha_salt(String senha_salt) {
+		this.senha_salt = senha_salt;
+	}
+
+
+
+	public String getSenha_hash() {
+		return senha_hash;
+	}
+
+
+
+	public void setSenha_hash(String senha_hash) {
+		this.senha_hash = senha_hash;
+	}
+
+
+
+	public String getCpf() {
 		return cpf;
 	}
 
@@ -47,13 +65,7 @@ public class Cliente {
 		this.data_nascimento = data_nascimento;
 	}
 
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
+	
 
 	public int getId() {
         return id;
@@ -75,6 +87,13 @@ public class Cliente {
         return email;
     }
 
+    public boolean isAtivo() {
+    	return ativo;
+    }
+    
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+      }
     public void setEmail(String email) {
         this.email = email;
     }

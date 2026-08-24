@@ -11,12 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -32,12 +35,12 @@ public class TelaCliente extends JPanel {
     txtNome = new JTextField(30),
     txtCpf = new JTextField(16),
     txtEmail = new JTextField(30),
-    txtTelefone = new JTextField(16),
-    txtEndereco = new JTextField(35),
+    txtData_nascimento = new JTextField(16),
     txtPesquisa = new JTextField(25);
+  private final JPasswordField senha = new JPasswordField(20);
   private final JCheckBox chkAtivo = new JCheckBox("Cliente ativo", true);
   private final DefaultTableModel modelo = new DefaultTableModel(
-    new Object[] { "ID", "Nome", "CPF", "E-mail", "Telefone", "Ativo" },
+    new Object[] { "ID", "Nome", "CPF", "E-mail", "Data de nascimento", "Ativo" },
     0
   ) {
     public boolean isCellEditable(int l, int c) {
@@ -66,13 +69,15 @@ public class TelaCliente extends JPanel {
     adicionar(formulario, g, 0, "Codigo:", txtId);
     adicionar(formulario, g, 1, "Nome*:", txtNome);
     adicionar(formulario, g, 2, "CPF*:", txtCpf);
-    adicionar(formulario, g, 3, "E-mail:", txtEmail);
-    adicionar(formulario, g, 4, "Telefone:", txtTelefone);
-    adicionar(formulario, g, 5, "Endereco:", txtEndereco);
+    adicionar(formulario, g, 3, "E-mail*:", txtEmail);
+    adicionar(formulario, g, 4, "Data de nascimento*:", txtData_nascimento);
+    adicionar(formulario, g, 5, "Senha:", senha);
     g.gridx = 1;
     g.gridy = 6;
     formulario.add(chkAtivo, g);
     txtId.setEditable(false);
+    JLabel aviso = new JLabel("Ao editar, deixe a senha vazia para mante-la.");
+    formulario.add(aviso, g);
     JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JButton novo = new JButton("Novo"),
       salvar = new JButton("Salvar"),
@@ -173,6 +178,9 @@ public class TelaCliente extends JPanel {
     txtNome.setText("");
     txtCpf.setText("");
     txtEmail.setText("");
+    txtData_nascimento.setText("");
+    senha.setText("");
+    chkAtivo.setSelected(true);
     tabela.clearSelection();
   }
 
@@ -180,25 +188,38 @@ public class TelaCliente extends JPanel {
     txtNome.setEditable(b);
     txtCpf.setEditable(b);
     txtEmail.setEditable(b);
+    txtData_nascimento.setEditable(b);
+    chkAtivo.setEnabled(b);
   }
-
-  public void mostrarCliente(Cliente c) {
-    txtId.setText(String.valueOf(c.getId()));
-    txtNome.setText(c.getNome());
-    txtCpf.setText(c.getCpf());
-    txtEmail.setText(c.getEmail());
+//Mudar este aqui
+  public void mostrarCliente(Cliente cliente) {
+    txtId.setText(String.valueOf(cliente.getId()));
+    txtNome.setText(cliente.getNome());
+    txtCpf.setText(cliente.getCpf());
+    txtEmail.setText(cliente.getEmail());
+    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    if (cliente.getData_nascimento() != null) {
+        LocalDate data = cliente.getData_nascimento().toLocalDate();
+        txtData_nascimento.setText(data.format(formatador));
+    } else {
+        txtData_nascimento.setText("");
+    }
+    senha.setText("");
+    chkAtivo.setSelected(cliente.isAtivo());
   }
 
   public void preencherTabela(List<Cliente> lista) {
     modelo.setRowCount(0);
     int i;
     for (i = 0; i < lista.size(); i++) {
-      Cliente c = lista.get(i);
+      Cliente cliente = lista.get(i);
       modelo.addRow(new Object[] {
-        Integer.valueOf(c.getId()),
-        c.getNome(),
-        c.getCpf(),
-        c.getEmail(),
+        Integer.valueOf(cliente.getId()),
+        cliente.getNome(),
+        cliente.getCpf(),
+        cliente.getEmail(),
+        cliente.getData_nascimento(),
+        cliente.isAtivo() ? "Sim" : "Nao"
 
       });
     }
@@ -228,6 +249,19 @@ public class TelaCliente extends JPanel {
   public JTextField getTxtPesquisa() {
     return txtPesquisa;
   }
+  
+  public JTextField getTxtData_nascimento() {
+	    return txtData_nascimento;
+	  }
+  
+  public JPasswordField getTxtSenha() {
+	    return senha;
+	  }
+  
+  public JCheckBox getChkAtivo() {
+	    return chkAtivo;
+	  }
+
 
 
 
