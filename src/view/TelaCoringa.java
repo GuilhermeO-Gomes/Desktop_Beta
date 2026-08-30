@@ -16,7 +16,7 @@ public class TelaCoringa extends JFrame {
 	public TelaCoringa() {
         
         setTitle("Sistema Bibliotecário");
-        
+        // Ele adiciona a tela login dentro dele, na mesma ideia de identação do html
         add(new TelaLogin());
 
         pack();
