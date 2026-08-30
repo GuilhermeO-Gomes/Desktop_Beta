@@ -26,7 +26,7 @@ public class ClienteDAO {
 	    ResultSet r = null;
 	    try {
 	      c = Conexao.abrir();
-	      p = c.prepareStatement("SELECT * FROM usuario WHERE email=? AND ativo=1");
+	      p = c.prepareStatement("SELECT * FROM cliente WHERE email=? AND ativo=1");
 	      p.setString(1, email.trim());
 	      r = p.executeQuery();
 	      if (r.next()) {
